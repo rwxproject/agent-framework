@@ -12,8 +12,13 @@ Agent Framework is a highly configurable Agentic Application Platform built with
 - **Infrastructure:** Docker, Kubernetes, GitHub Actions
 - **Desktop:** Tauri (for local deployment)
 
-See @docs/PRD.md for full specifications.
-See @docs/CLAUDE_CODE_INFRASTRUCTURE.md for Claude Code configuration details.
+See `docs/PRD-SUMMARY.md` for an overview, or the milestone-specific docs:
+- `docs/PRD-M1-MVP.md` - MVP with basic agent and UI
+- `docs/PRD-M2-MCP.md` - MCP integration
+- `docs/PRD-M3-A2A.md` - A2A multi-agent integration
+- `docs/PRD-M4-CANVAS.md` - Visual workflow canvas
+
+See `docs/CLAUDE_CODE_INFRASTRUCTURE.md` for Claude Code configuration details.
 
 ## Development Workflow
 
@@ -171,7 +176,11 @@ agent-framework/
 │   ├── a2a/             # A2A middleware
 │   └── state/           # State management, models
 ├── docs/                # Documentation
-│   └── PRD.md          # Product Requirements Document
+│   ├── PRD-SUMMARY.md  # Quick overview
+│   ├── PRD-M1-MVP.md   # Milestone 1: MVP specs
+│   ├── PRD-M2-MCP.md   # Milestone 2: MCP specs
+│   ├── PRD-M3-A2A.md   # Milestone 3: A2A specs
+│   └── PRD-M4-CANVAS.md # Milestone 4: Canvas specs
 ├── .claude/             # Claude Code configuration
 │   ├── agents/         # Custom subagents
 │   ├── skills/         # Project-specific skills
