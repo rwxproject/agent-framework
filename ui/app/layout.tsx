@@ -1,22 +1,23 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import { CopilotKit } from "@copilotkit/react-core";
+import { ThemeProvider } from "@/components/providers/ThemeProvider";
 import "@copilotkit/react-ui/styles.css";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const inter = Inter({
+  variable: "--font-inter",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "Agent Framework",
-  description: "Agentic Application Platform with Google ADK and CopilotKit",
+  description: "Build, deploy, and manage AI agent workflows",
 };
 
 export default function RootLayout({
@@ -25,13 +26,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${inter.variable} ${jetbrainsMono.variable} antialiased`}
+        style={{
+          backgroundColor: "var(--color-background)",
+          color: "var(--color-text)",
+        }}
       >
-        <CopilotKit runtimeUrl="/api/copilotkit" agent="orchestrator">
-          {children}
-        </CopilotKit>
+        <ThemeProvider>
+          <CopilotKit runtimeUrl="/api/copilotkit" agent="orchestrator">
+            {children}
+          </CopilotKit>
+        </ThemeProvider>
       </body>
     </html>
   );

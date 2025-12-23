@@ -1,12 +1,18 @@
 """FastAPI application entrypoint for Agent Framework."""
 
+import os
 from contextlib import asynccontextmanager
 
 from ag_ui_adk import ADKAgent, add_adk_fastapi_endpoint
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from agents import orchestrator
+from api.config import router as config_router
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 @asynccontextmanager
@@ -21,10 +27,13 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(
     title="Agent Framework",
-    description="Agentic Application Platform with Google ADK and CopilotKit",
+    description="Build, deploy, and manage AI agent workflows",
     version="0.1.0",
     lifespan=lifespan,
 )
+
+# Include API routers
+app.include_router(config_router)
 
 # CORS configuration for frontend
 app.add_middleware(
