@@ -4,16 +4,23 @@ A highly configurable Agentic Application Platform for building, deploying, and 
 
 ## Overview
 
-Agent Framework is a full-stack platform that enables users to create custom AI agents through a visual workflow designer, connect them to external tools via MCP (Model Context Protocol), and orchestrate multi-agent systems using A2A (Agent-to-Agent) communication.
+Agent Framework is a full-stack platform that enables users to create custom AI agents through an intuitive interface, configure multiple LLM providers, and build orchestrated agent workflows using Google ADK.
 
-### Key Features
+### Current Features (v0.1.0 MVP)
 
-- **Visual Workflow Designer** - Drag-and-drop canvas for building agent workflows
-- **Multi-Model Support** - Use Gemini, OpenAI, Anthropic, or local models (Ollama)
-- **MCP Tool Integration** - Connect agents to any MCP-compatible tool server
-- **A2A Orchestration** - Coordinate multiple agents across different frameworks
-- **Human-in-the-Loop** - Built-in approval workflows and user interaction patterns
-- **Real-time Collaboration** - Live agent state synchronization via AG-UI protocol
+- **Chat Interface** - Embedded AI chat powered by CopilotKit + AG-UI protocol
+- **Multi-Model Support** - Configure Gemini, OpenAI, Anthropic, or Ollama
+- **Model Configuration UI** - Switch providers and models in the UI
+- **Dark Theme System** - Customizable dark mode with color presets
+- **Orchestrator Agent** - Basic Google ADK agent with FastAPI backend
+
+### Planned Features
+
+See [ROADMAP.md](ROADMAP.md) for upcoming features including:
+- MCP Tool Integration (Milestone 2)
+- A2A Multi-Agent Orchestration (Milestone 3)
+- Visual Workflow Canvas (Milestone 4)
+- Enterprise Features (Milestone 5)
 
 ## Architecture
 
@@ -21,25 +28,18 @@ Agent Framework is a full-stack platform that enables users to create custom AI 
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Frontend (Next.js)                        │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │  Chat UI    │  │  Workflow   │  │  Agent Management       │  │
-│  │ (CopilotKit)│  │  Canvas     │  │  Dashboard              │  │
+│  │  Chat UI    │  │  Config     │  │  Theme                  │  │
+│  │ (CopilotKit)│  │  Panel      │  │  Customization          │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
                               │ AG-UI Protocol
 ┌─────────────────────────────────────────────────────────────────┐
 │                        Backend (FastAPI)                         │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────────┐  │
-│  │ Orchestrator│  │  MCP Layer  │  │  A2A Middleware         │  │
-│  │ (Google ADK)│  │  (Tools)    │  │  (Multi-Agent)          │  │
+│  │ Orchestrator│  │  Config     │  │  Model                  │  │
+│  │ (Google ADK)│  │  API        │  │  Providers              │  │
 │  └─────────────┘  └─────────────┘  └─────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
-                              │
-        ┌─────────────────────┼─────────────────────┐
-        ▼                     ▼                     ▼
-   ┌─────────┐          ┌─────────┐          ┌─────────┐
-   │   MCP   │          │ External│          │  Local  │
-   │ Servers │          │ Agents  │          │ Models  │
-   └─────────┘          └─────────┘          └─────────┘
 ```
 
 ## Tech Stack
@@ -48,14 +48,10 @@ Agent Framework is a full-stack platform that enables users to create custom AI 
 |-------|------------|
 | **Frontend** | Next.js 14+, React, TypeScript, Tailwind CSS |
 | **Agent UI** | CopilotKit (chat, HITL, generative UI) |
-| **Workflow Canvas** | React Flow |
 | **Backend** | FastAPI, Python 3.13 |
 | **Agent Framework** | Google ADK (Agent Development Kit) |
-| **Protocols** | AG-UI, MCP, A2A |
-| **Database** | PostgreSQL, Redis |
-| **Auth** | Auth0 |
-| **Infrastructure** | Docker, Kubernetes |
-| **Desktop** | Tauri (optional local deployment) |
+| **Multi-Model** | LiteLLM (OpenAI, Anthropic, Ollama support) |
+| **Protocols** | AG-UI |
 
 ## Getting Started
 
@@ -63,8 +59,6 @@ Agent Framework is a full-stack platform that enables users to create custom AI 
 
 - Node.js 18+ and Bun
 - Python 3.13+ and uv
-- Docker (for local services)
-- GitHub account (for MCP integration)
 
 ### Quick Start
 
@@ -86,96 +80,49 @@ uv sync
 uv run uvicorn main:app --reload
 ```
 
+The frontend runs at http://localhost:3000 and the backend at http://localhost:8000.
+
 ### Environment Variables
 
-Create `.env` files in `ui/` and `agent/` directories:
+Create `.env` files in `ui/` and `agent/` directories (see `.env.example` files):
 
 ```bash
-# Backend (.env)
-DATABASE_URL=postgresql://user:pass@localhost:5432/agentframework
-REDIS_URL=redis://localhost:6379
-GOOGLE_API_KEY=your_gemini_key
-OPENAI_API_KEY=your_openai_key        # Optional
-ANTHROPIC_API_KEY=your_anthropic_key  # Optional
+# Backend (agent/.env)
+GOOGLE_API_KEY=your_gemini_key          # Required for Gemini
+OPENAI_API_KEY=your_openai_key          # Optional
+ANTHROPIC_API_KEY=your_anthropic_key    # Optional
 
-# Frontend (.env.local)
+# Frontend (ui/.env.local)
 NEXT_PUBLIC_API_URL=http://localhost:8000
-AUTH0_SECRET=your_auth0_secret
-AUTH0_CLIENT_ID=your_client_id
-AUTH0_CLIENT_SECRET=your_client_secret
-AUTH0_ISSUER_BASE_URL=https://your-tenant.auth0.com
 ```
 
-## Agent Types
+## Model Providers
 
-Agent Framework supports multiple agent patterns via Google ADK:
+Agent Framework supports multiple LLM providers:
 
-| Type | Description | Use Case |
-|------|-------------|----------|
-| **LlmAgent** | Single LLM-powered agent | Research, analysis, generation |
-| **SequentialAgent** | Pipeline of agents | Multi-step workflows |
-| **ParallelAgent** | Concurrent execution | Gather info from multiple sources |
-| **LoopAgent** | Iterative refinement | Quality improvement cycles |
-| **Custom** | BaseAgent subclasses | Conditional routing, complex logic |
+| Provider | Models | Requirements |
+|----------|--------|--------------|
+| **Gemini** | gemini-2.0-flash, gemini-2.5-pro | `GOOGLE_API_KEY` |
+| **OpenAI** | gpt-4o, gpt-4-turbo, gpt-3.5-turbo | `OPENAI_API_KEY` |
+| **Anthropic** | claude-3-opus, claude-3-sonnet, claude-3-haiku | `ANTHROPIC_API_KEY` |
+| **Ollama** | llama3.2, mistral, codellama | Local Ollama server |
 
-### Example: Research Workflow
+Configure your preferred model in the Configuration page (`/config`).
 
-```python
-from google.adk.agents import LlmAgent, SequentialAgent, ParallelAgent
+### Using Ollama (Local Models)
 
-# Parallel information gathering
-gatherer = ParallelAgent(
-    name="InfoGatherer",
-    sub_agents=[
-        LlmAgent(name="WebSearch", output_key="web_results", ...),
-        LlmAgent(name="DBSearch", output_key="db_results", ...),
-    ]
-)
+```bash
+# Install Ollama
+curl -fsSL https://ollama.com/install.sh | sh
 
-# Sequential synthesis
-workflow = SequentialAgent(
-    name="ResearchWorkflow",
-    sub_agents=[
-        gatherer,
-        LlmAgent(name="Synthesizer", instruction="Combine {web_results} and {db_results}...")
-    ]
-)
+# Pull a model
+ollama pull llama3.2
+
+# Start Ollama server
+ollama serve
 ```
 
-## Multi-Model Support
-
-Use any LLM provider through LiteLLM integration:
-
-```python
-from google.adk.agents import LlmAgent
-from google.adk.models.lite_llm import LiteLlm
-
-# Gemini (native)
-agent = LlmAgent(model="gemini-2.5-flash", ...)
-
-# OpenAI
-agent = LlmAgent(model=LiteLlm(model="openai/gpt-4o"), ...)
-
-# Anthropic
-agent = LlmAgent(model=LiteLlm(model="anthropic/claude-3-haiku-20240307"), ...)
-
-# Local (Ollama)
-agent = LlmAgent(model=LiteLlm(model="ollama_chat/llama3.2"), ...)
-```
-
-## MCP Tool Integration
-
-Connect agents to external tools via MCP servers:
-
-```python
-# Register MCP tools with agent
-tools = await mcp_registry.get_tools(["web_search", "database_query"])
-agent = LlmAgent(
-    name="ResearchAgent",
-    tools=tools,
-    instruction="Use available tools to research the topic..."
-)
-```
+Then select "Ollama" as the provider in the Configuration page.
 
 ## Project Structure
 
@@ -183,22 +130,26 @@ agent = LlmAgent(
 agent-framework/
 ├── ui/                    # Next.js frontend
 │   ├── app/              # App router pages
+│   │   ├── page.tsx      # Main chat page
+│   │   └── config/       # Configuration page
 │   ├── components/       # React components
-│   │   ├── chat/        # CopilotKit chat UI
-│   │   ├── canvas/      # React Flow workflow canvas
-│   │   └── hitl/        # Human-in-the-loop components
-│   └── lib/             # Utilities, hooks, state
+│   │   ├── chat/        # Chat container
+│   │   ├── config/      # Model & theme config panels
+│   │   ├── layout/      # Header, sidebar
+│   │   └── providers/   # Theme provider
+│   └── lib/             # Utilities (theme, etc.)
 ├── agent/                # Python backend
 │   ├── main.py          # FastAPI entrypoint
 │   ├── agents/          # ADK agent definitions
-│   ├── orchestrator/    # Orchestration layer
-│   ├── mcp/             # MCP server connections
-│   ├── a2a/             # A2A middleware
-│   └── state/           # State management, models
+│   ├── api/             # API routers
+│   └── config/          # Model configurations
 ├── docs/                # Documentation
-│   ├── PRD.md          # Product Requirements
-│   └── CLAUDE_CODE_INFRASTRUCTURE.md
-└── docker/             # Docker configurations
+│   ├── PRD-SUMMARY.md   # Quick overview
+│   ├── PRD-M1-MVP.md    # Milestone 1 specs
+│   ├── PRD-M2-MCP.md    # Milestone 2 specs
+│   ├── PRD-M3-A2A.md    # Milestone 3 specs
+│   └── PRD-M4-CANVAS.md # Milestone 4 specs
+└── ROADMAP.md           # Feature roadmap
 ```
 
 ## Development
@@ -214,28 +165,22 @@ agent-framework/
 |------|---------|
 | Dev Server (UI) | `cd ui && bun dev` |
 | Dev Server (API) | `cd agent && uv run uvicorn main:app --reload` |
-| Test (UI) | `cd ui && bun test` |
+| Test (UI) | `cd ui && bun run test` |
 | Test (API) | `cd agent && uv run pytest` |
 | Lint | `uv run ruff check .` |
 | Format | `uv run ruff format .` |
-| Build (UI) | `cd ui && bun build` |
-| Docker | `docker compose up` |
+| Build (UI) | `cd ui && bun run build` |
 
 ### Claude Code Development
 
-This project is configured for AI-assisted development with Claude Code:
-
-- **5 Custom Subagents** - Specialized for ADK, CopilotKit, Canvas, MCP, A2A
-- **4 Project Skills** - Agent validation, MCP testing, workflow compilation, HITL patterns
-- **Git Worktrees** - Parallel development across feature branches
-- **Automation Hooks** - Auto-formatting on save
-
-See [docs/CLAUDE_CODE_INFRASTRUCTURE.md](docs/CLAUDE_CODE_INFRASTRUCTURE.md) for full details.
+This project is configured for AI-assisted development with Claude Code. See [CLAUDE.md](CLAUDE.md) for development guidelines and [docs/CLAUDE_CODE_INFRASTRUCTURE.md](docs/CLAUDE_CODE_INFRASTRUCTURE.md) for full setup details.
 
 ## Documentation
 
-- [Product Requirements Document](docs/PRD.md) - Full specifications
-- [Claude Code Infrastructure](docs/CLAUDE_CODE_INFRASTRUCTURE.md) - Development environment setup
+- [ROADMAP.md](ROADMAP.md) - Feature roadmap and planned milestones
+- [CLAUDE.md](CLAUDE.md) - Development guidelines
+- [docs/PRD-SUMMARY.md](docs/PRD-SUMMARY.md) - Product overview
+- [docs/CLAUDE_CODE_INFRASTRUCTURE.md](docs/CLAUDE_CODE_INFRASTRUCTURE.md) - Claude Code configuration
 
 ## License
 

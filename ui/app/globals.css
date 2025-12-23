@@ -1,0 +1,133 @@
+@import "tailwindcss";
+
+/* Dark Theme CSS Variables (default) */
+:root {
+  /* Colors */
+  --color-background: #0f0f0f;
+  --color-surface: #1a1a1a;
+  --color-surfaceHover: #252525;
+  --color-border: #2a2a2a;
+  --color-primary: #3b82f6;
+  --color-primaryHover: #2563eb;
+  --color-text: #fafafa;
+  --color-textSecondary: #a1a1aa;
+  --color-success: #22c55e;
+  --color-error: #ef4444;
+  --color-warning: #eab308;
+
+  /* Fonts */
+  --font-heading: Inter, system-ui, sans-serif;
+  --font-body: Inter, system-ui, sans-serif;
+  --font-mono: JetBrains Mono, Menlo, monospace;
+
+  /* Other */
+  --border-radius: 8px;
+
+  /* Legacy support */
+  --background: var(--color-background);
+  --foreground: var(--color-text);
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-text);
+  --font-sans: var(--font-body);
+  --font-mono: var(--font-mono);
+}
+
+/* Base styles */
+body {
+  background-color: var(--color-background);
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+/* Utility classes for theme colors */
+.bg-surface {
+  background-color: var(--color-surface);
+}
+
+.bg-surface-hover:hover {
+  background-color: var(--color-surfaceHover);
+}
+
+.border-theme {
+  border-color: var(--color-border);
+}
+
+.text-primary {
+  color: var(--color-primary);
+}
+
+.text-secondary {
+  color: var(--color-textSecondary);
+}
+
+.bg-primary {
+  background-color: var(--color-primary);
+}
+
+.bg-primary:hover {
+  background-color: var(--color-primaryHover);
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-surfaceHover);
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background-color: var(--color-primary);
+  color: white;
+}
+
+/* CopilotKit Chat Overrides - Dark Theme */
+[class*="copilotkit"] {
+  --copilot-primary: var(--color-primary) !important;
+  --copilot-background: var(--color-surface) !important;
+  --copilot-text: var(--color-text) !important;
+}
+
+/* Override CopilotKit chat styles */
+.copilotKitChat,
+[data-testid="copilot-chat"] {
+  background-color: var(--color-surface) !important;
+  color: var(--color-text) !important;
+}
+
+/* Input field overrides */
+input, textarea, select {
+  background-color: var(--color-surface);
+  color: var(--color-text);
+  border-color: var(--color-border);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary);
+}
+
+/* Button overrides */
+button {
+  transition: all 0.2s ease;
+}
